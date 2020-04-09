@@ -275,3 +275,7 @@ dmypy.json
 *.nif
 *.conll
 *.ttl
+
+data-converter/wwo/
+data-converter/depositions/
+linker/generated/

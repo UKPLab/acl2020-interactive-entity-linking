@@ -43,8 +43,8 @@ public class AppWwo
     }
 
     public static void convertWwo() throws Exception {
-        Path path = Paths.get("/home/klie/git/linker/data/wwo/files/");
-        Path generatedPath = Paths.get("/home/klie/git/linker/generated/wwo/");
+        Path path = Paths.get("wwo/files/");
+        Path generatedPath = Paths.get("../linker/generated/wwo/");
         Path splitsPath = generatedPath.resolve("splits");
 
         doTheSplit(path, splitsPath, generatedPath, (a,b,c) -> {
@@ -62,7 +62,7 @@ public class AppWwo
 
         runPipeline(
                 createReaderDescription(TeiReader.class,
-                        TeiReader.PARAM_SOURCE_LOCATION, pathIn.resolve("*.xml").toString(),
+                        TeiReader.PARAM_SOURCE_LOCATION, pathIn.toString() + "/*.xml",
                         TeiReader.PARAM_LANGUAGE, "en"),
                 createEngineDescription(BreakIteratorSegmenter.class),
                 createEngineDescription(SentenceMerger.class,
