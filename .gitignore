@@ -279,3 +279,6 @@ dmypy.json
 data-converter/wwo/
 data-converter/depositions/
 linker/generated/
+venv/
+linker/data/
+cache/

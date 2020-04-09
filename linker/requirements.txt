@@ -1,0 +1,17 @@
+attrs
+numpy
+scipy
+pandas
+scikit-learn
+lightgbm
+torch
+torchvision
+jellyfish
+textdistance[extras]
+tqdm
+rdflib
+SPARQLWrapper
+diskcache
+logging-reset
+sentence-transformers
+lxml
