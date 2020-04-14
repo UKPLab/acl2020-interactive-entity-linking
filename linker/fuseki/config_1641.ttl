@@ -1,0 +1,101 @@
+######## Example of a TDB dataset and text index#########################
+# The main doc sources are:
+#  - https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html
+#  - https://jena.apache.org/documentation/assembler/assembler-howto.html
+#  - https://jena.apache.org/documentation/assembler/assembler.ttl
+# See https://jena.apache.org/documentation/fuseki2/fuseki-layout.html for the destination of this file.
+#########################################################################
+
+@prefix :        <http://localhost/jena_example/#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix text:    <http://jena.apache.org/text#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+
+[] rdf:type fuseki:Server ;
+   fuseki:services (
+     :myservice
+   ) .
+
+:myservice rdf:type fuseki:Service ;
+    fuseki:name                       "depositions" ;     # e.g : `s-query --service=http://localhost:3030/myds "select * ..."`
+    fuseki:serviceQuery               "query" ;    # SPARQL query service
+    fuseki:serviceUpdate              "update" ;   # SPARQL update service
+    fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
+    fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
+    fuseki:dataset                    :text_dataset ;
+    .
+
+## ---------------------------------------------------------------
+
+# A TextDataset is a regular dataset with a text index.
+:text_dataset rdf:type     text:TextDataset ;
+    text:dataset   <#depositions> ; # <-- replace `:my_dataset` with the desired URI
+    text:index     <#indexLucene> ;
+.
+
+<#depositions> rdf:type tdb:DatasetTDB ;
+tdb:location "data_depositions/tdb" ; #path to TDB
+.
+
+
+
+# Text index description
+<#indexLucene> a text:TextIndexLucene ;
+    text:directory <file:data_depositions/luceneIndexing>    ;
+    text:entityMap <#entMap> ;
+    text:storeValues true ; 
+    text:analyzer [ a text:StandardAnalyzer ] ;
+    text:queryAnalyzer [ a text:KeywordAnalyzer ] ;
+    text:queryParser text:ComplexPhraseQueryParser ;
+    text:defineAnalyzers (
+        [ text:defineAnalyzer :configuredAnalyzer ;
+        text:analyzer [
+                a text:ConfigurableAnalyzer ;
+                text:tokenizer text:StandardTokenizer ;
+                text:filters ( :asciiff text:LowerCaseFilter ) ;
+                text:stopWords ("it's" "had" "its" "you'd" "his" "whom" "or" "any" "o" "other" "it" "so" "ours" "having" "mustn" "themselves" "most" "doesn" "mightn't" "them" "as" "should've" "which" "at" "ma" "theirs" "haven" "to" "hadn" "shan't" "be" "herself" "my" "under" "ourselves" "until" "more" "re" "wouldn't" "over" "you're" "only" "were" "has" "s" "aren't" "himself" "no" "the" "you'll" "doesn't" "through" "itself" "few" "from" "all" "m" "they" "wasn't" "won" "then" "because" "before" "t" "of" "against" "am" "there" "hadn't" "if" "me" "d" "she" "your" "what" "further" "on" "here" "than" "aren" "hers" "too" "didn't" "own" "her" "between" "that" "below" "him" "out" "where" "shouldn" "was" "our" "haven't" "shouldn't" "we" "yours" "you" "this" "by" "about" "off" "for" "not" "isn" "don't" "but" "once" "in" "each" "don" "hasn't" "up" "did" "some" "above" "can" "he" "have" "are" "she's" "an" "yourselves" "just" "into" "shan" "same" "during" "been" "will" "wasn" "how" "weren" "didn" "myself" "those" "y" "after" "i" "do" "that'll" "needn't" "ain" "such" "hasn" "down" "a" "mustn't" "these" "does" "is" "when" "couldn't" "and" "won't" "wouldn" "being" "you've" "ll" "very" "while" "why" "nor" "who" "now" "with" "needn" "should" "ve" "yourself" "doing" "both" "weren't" "couldn" "their" "again" "mightn" "isn't")
+
+                ] ]
+        [ text:defineFilter :asciiff ;
+        text:filter [
+                a text:GenericFilter ;
+                text:class "org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter" ;
+                text:params (
+                    [ text:paramName "preserveOriginal" ;
+                    text:paramValue true ]
+                    ) ] ]
+        ) ;
+     text:multilingualSupport true ; # optional
+.
+# Entity map (see documentation for other options)
+<#entMap> a text:EntityMap ;
+    text:defaultField     "pref" ;
+    text:entityField      "uri" ;
+    text:uidField         "uid" ;
+    text:langField        "lang" ;
+    text:graphField       "graph" ;
+    text:map (
+         # skos:prefLabel
+         [ text:field "pref" ;
+           text:predicate skos:prefLabel ;
+           text:analyzer [
+             a text:DefinedAnalyzer ;
+             text:useAnalyzer :configuredAnalyzer ] ;
+         ]
+         # skos:altLabel
+         [ text:field "alt" ;
+           text:predicate skos:altLabel ;
+           text:analyzer [
+             a text:DefinedAnalyzer ;
+             text:useAnalyzer :configuredAnalyzer ] ;
+         ]
+         # rdfs:comment
+         [ text:field "description" ;
+           text:predicate rdfs:comment ;
+            text:analyzer [
+         a text:DefinedAnalyzer ;
+         text:useAnalyzer :configuredAnalyzer ] ;         ]
+     ) . 
