@@ -299,7 +299,7 @@ class FusekiKnowledgeBase(KnowledgeBase):
             SELECT DISTINCT  ?lc ?dc ?subj
             WHERE
               { 
-                  ?subj  text:query            ( skos:prefLabel "$query*" ) ; skos:prefLabel               ?lc .
+                  ?subj  text:query ( skos:prefLabel "$query*" ) ; skos:prefLabel ?lc .
                       
                 OPTIONAL
                   {   { ?subj  <http://www.w3.org/2000/01/rdf-schema#comment>  ?dc
@@ -317,7 +317,7 @@ class FusekiKnowledgeBase(KnowledgeBase):
         return " ".join([s + "~" if len(s) > 3 else s for s in mention.split()])
 
     def _get_remote_uri(self) -> str:
-        return f"http://desktop-184:3030/{self._name}/query"
+        return f"http://localhost:3030/{self._name}/query"
 
     def get_name(self) -> str:
         return self._name

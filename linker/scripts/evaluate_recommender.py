@@ -255,5 +255,6 @@ def main():
         table_latex = tabulate(table, headers=headers, floatfmt=".2f", tablefmt="latex_booktabs")
         f.write(table_latex)
 
+
 if __name__ == '__main__':
     main()

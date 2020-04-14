@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from gleipnir.config import path_to_results
 from gleipnir.datasets import load_dataframe_from_csv
-from gleipnir.experiments.evaluate_ranking import evaluate_dictionary_baseline, evaluate_leven_baseline, evaluate_lgbm, \
+from scripts.evaluate_ranking import evaluate_lgbm, \
     evaluate_ranksvm, evaluate_ranknet_handcrafted
 
 

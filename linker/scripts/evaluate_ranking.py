@@ -94,7 +94,7 @@ def evaluate_leven_baseline(dataset_name: str, df_train, df_eval) -> Result:
 
 def main():
     datasets_train_test = [
-        "aida",
+        # "aida",
         "wwo-fuseki",
         "1641-fuseki",
     ]

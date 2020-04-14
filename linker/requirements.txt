@@ -15,3 +15,8 @@ diskcache
 logging-reset
 sentence-transformers
 lxml
+matplotlib
+flair
+more_itertools
+dkpro-cassis
+flask

@@ -8,6 +8,8 @@ import attr
 import numpy as np
 import pandas as pd
 
+from flair.data import Sentence
+
 from sklearn.datasets import dump_svmlight_file
 from torch.utils.data import Dataset
 
@@ -240,3 +242,62 @@ class HandcraftedLetorDataset(Dataset):
            "y_n": y_n
         }
 
+
+class PairwiseFlairLetorDataset(Dataset):
+    # https://github.com/yutayamazaki/RankNet-PyTorch/
+
+    def __init__(self, df: pd.DataFrame):
+        mentions = []
+        grouped_kb_labels = []
+        grouped_descriptions = []
+        contexts = []
+
+        for group in df.ext.groupby_qid:
+            # The mention is identical for all items in the group
+            mentions.append(Sentence(group["mention"].values[0], use_tokenizer=False))
+            grouped_kb_labels.append([Sentence(x, use_tokenizer=True) for x in group["label"]])
+            grouped_descriptions.append([Sentence(x, use_tokenizer=True) for x in group["description"]])
+            contexts.append(Sentence(group["context"].values[0], use_tokenizer=True))
+
+        self.mentions = mentions
+        self.grouped_kb_labels = grouped_kb_labels
+        self.grouped_descriptions = grouped_descriptions
+        self.contexts = contexts
+        self.y_grouped = df.ext.group_y
+        self.gold_indices = df.ext.gold_indices
+
+    def __len__(self) -> int:
+        return len(self.y_grouped)
+
+    def __getitem__(self, group_idx: int):
+        mention = self.mentions[group_idx]
+        labels = self.grouped_kb_labels[group_idx]
+        descriptions = self.grouped_descriptions[group_idx]
+        context = self.contexts[group_idx]
+        y = self.y_grouped[group_idx]
+        gold_idx = self.gold_indices[group_idx]
+
+        assert gold_idx >= 0, "Group does not have gold label!"
+        assert y[gold_idx] == 1.0, "Gold should have score of 1!"
+
+        label_p = labels[gold_idx]
+        description_p = descriptions[gold_idx]
+        y_p = y[gold_idx]
+
+        indices = np.arange(start=1, stop=len(y))
+        idx_n = np.random.choice(indices)
+
+        label_n = labels[idx_n]
+        description_n = descriptions[idx_n]
+        y_n = y[idx_n]
+
+        return {
+           "mention": mention,
+           "label_p": label_p,
+           "description_p": description_p,
+           "y_p": y_p,
+           "label_n": label_n,
+           "description_n": description_n,
+           "y_n": y_n,
+           "context": context
+        }

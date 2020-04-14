@@ -276,9 +276,11 @@ dmypy.json
 *.conll
 *.ttl
 
-data-converter/wwo/
-data-converter/depositions/
-linker/generated/
+/data-converter/wwo/
+/data-converter/depositions/
+/linker/generated/
+/linker/data/
 venv/
-linker/data/
 cache/
+/linker/fuseki/apache-jena-3.12.0/
+/linker/fuseki/apache-jena-fuseki-3.12.0

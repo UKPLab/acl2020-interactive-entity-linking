@@ -11,15 +11,12 @@ from ariadne.util import setup_logging
 from ariadne.contrib.stringmatcher import LevenshteinStringMatcher
 from cassis import Cas, load_typesystem, load_cas_from_xmi
 from flask import request, jsonify
-from tabulate import tabulate
 
 from gleipnir.config import PATH_GENERATED, PATH_RECOMMENDER_MODELS
-from gleipnir.models.handcrafted import FeatureGenerator, Feature
+from gleipnir.handcrafted import FeatureGenerator, Feature
 from gleipnir.models.letor_models import LetorModel
 from gleipnir.models.ranksvm import SklearnRankSvmModel
-from gleipnir.models.baselines import LevenshteinBaseline, NoopBaseline
-
-from gleipnir.models.lgbm import LgbmModel
+from gleipnir.models.baselines import NoopBaseline
 
 logger = logging.getLogger(__name__)
 

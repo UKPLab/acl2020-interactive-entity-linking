@@ -28,6 +28,7 @@ class CorpusStatistics:
     entities_per_sentence = attr.ib()       # type: float
     confusability_corpus = attr.ib()        # type: Score
     confusability_kb = attr.ib()            # type: Score
+    avg_number_of_candidates = attr.ib()    # type: float
     number_of_no_candidates = attr.ib()     # type: int
     gini = attr.ib()                        # type: float
     distance_mention_label = attr.ib()      # type: float
@@ -66,6 +67,7 @@ def generate_statistics(corpora: List[Corpus], kb: KnowledgeBase) -> List[Corpus
         entity_count = defaultdict(int)
 
         distances_mention_label = []
+        all_number_of_candidates = []
 
         for document in tqdm(corpus.documents):
             for sentence in document.sentences:
@@ -74,11 +76,13 @@ def generate_statistics(corpora: List[Corpus], kb: KnowledgeBase) -> List[Corpus
 
                     text_to_relation_index[surface_form].append(entity.uri)
 
-                    score = len(kb.search_mention(surface_form.lower()))
-                    kb_confusability_scores.append(score)
+                    number_of_candidates = len(kb.search_mention(surface_form.lower()))
+                    all_number_of_candidates.append(number_of_candidates)
+
+                    kb_confusability_scores.append(number_of_candidates)
                     entity_count[entity.uri] += 1
 
-                    if score == 0:
+                    if number_of_candidates == 0:
                         number_of_no_candidates += 1
 
                     if entity.uri == "NIL":
@@ -96,6 +100,7 @@ def generate_statistics(corpora: List[Corpus], kb: KnowledgeBase) -> List[Corpus
         stats.number_of_no_candidates = number_of_no_candidates
         stats.gini = gini(np.array(list(entity_count.values())))
         stats.distance_mention_label = statistics.mean(distances_mention_label)
+        stats.avg_number_of_candidates = statistics.mean(all_number_of_candidates)
 
         result.append(stats)
 
@@ -104,7 +109,7 @@ def generate_statistics(corpora: List[Corpus], kb: KnowledgeBase) -> List[Corpus
 def generate_statistics_wwo() -> List[CorpusStatistics]:
     # corpora = [load_wwo_train(), load_wwo_dev(), load_wwo_test()]
     corpora = [load_wwo_all()]
-    kb = FusekiKnowledgeBase("wwo")
+    kb = FusekiKnowledgeBase("wwo", caching=False)
 
     return generate_statistics(corpora, kb)
 
@@ -137,7 +142,8 @@ def _generate_base_statistics(corpus: Corpus) -> CorpusStatistics:
         confusability_kb=None,
         number_of_no_candidates=0,
         gini=0.0,
-        distance_mention_label=0.0
+        distance_mention_label=0.0,
+        avg_number_of_candidates=0.0,
     )
 
 
@@ -191,16 +197,16 @@ def gini(array):
 
 def main():
     fns = [
-        generate_statistics_aida,
+        #generate_statistics_aida,
         generate_statistics_wwo,
-        generate_statistics_depositions,
+        #generate_statistics_depositions,
     ]
 
     stats = []
     for fn in fns:
         stats.extend(fn())
 
-    headers = ["Corpus", "#D", "#T", "#E", "#E/S", "%NIL", "Avg. Amb.", "Conf.", "Gini"]
+    headers = ["Corpus", "#D", "#T", "#E", "#E/S",  "Avg. #Cand.",  "%NIL", "Avg. Amb.", "Conf.", "Gini"]
     rows = []
     for e in stats:
         row = [
@@ -209,6 +215,7 @@ def main():
             e.number_of_tokens,
             e.number_of_entities,
             e.entities_per_sentence,
+            e.avg_number_of_candidates,
             e.number_of_nil,
             e.confusability_corpus.average,
             e.confusability_kb.average,
@@ -216,7 +223,7 @@ def main():
         ]
         rows.append(row)
 
-    print("\n" + tabulate(rows, headers=headers, floatfmt=".2f", tablefmt="latex_booktabs"))
+    print("\n" + tabulate(rows, headers=headers, floatfmt=".2f"))
 
 
 if __name__ == '__main__':

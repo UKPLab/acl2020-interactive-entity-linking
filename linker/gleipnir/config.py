@@ -75,6 +75,7 @@ PATH_RECOMMENDER_MODELS = os.path.join(ROOT, "recommender_models")
 
 PATH_DATA_USERSTUDY = os.path.join(PATH_DATA, "userstudy")
 
+
 def path_to_results() -> str:
     path = os.path.join(PATH_RESULTS, datetime.now().isoformat().replace(":", "-"))
     os.makedirs(path, exist_ok=True)

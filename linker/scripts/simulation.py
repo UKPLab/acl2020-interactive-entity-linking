@@ -1,22 +1,19 @@
 import os
 from typing import Dict
 
-import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
 import pylab
 
 from gleipnir.config import path_to_results
-from gleipnir.datasets import LetorDataset, load_handcrafted_data, load_handcrafted_simulation_data
+from gleipnir.datasets import load_handcrafted_simulation_data
 from gleipnir.evaluation.metrics import EvaluationResult
-from gleipnir.kb import KnowledgeBase, FusekiKnowledgeBase
 from gleipnir.models.baselines import DictionaryBaseline, LevenshteinBaseline
 from gleipnir.models.bayesian import GpplLetorModel
-from gleipnir.models.handcrafted import FeatureGenerator, Feature
 from gleipnir.models.letor_models import LetorModel
 from gleipnir.models.lgbm import LgbmModel
-from gleipnir.models.ranknet import HandcraftedRankNetLetorModel, RankNetWithEmbeddingsLetorModel
+from gleipnir.models.ranknet import HandcraftedRankNetLetorModel
 from gleipnir.models.ranksvm import SklearnRankSvmModel
 from gleipnir.util import get_logger
 
@@ -40,9 +37,9 @@ class SliceSizeGenerator:
         elif x < 1000:
             self.n += 50
         elif x < 10000:
-            self.n += 100
+            self.n += 200
         else:
-            self.n += 250
+            self.n += 500
 
         return x
 
@@ -130,8 +127,7 @@ def plot_simulation(dir: str, data: Dict[int, EvaluationResult], model_name: str
     # plt.show()
 
 
-def simulate_single(df: pd.DataFrame, model: LetorModel, seed_size: int,
-                    evaluate_on_train: bool):
+def simulate_single(df: pd.DataFrame, model: LetorModel, seed_size: int):
     seed, df_train = df.ext.split_by_qid(seed_size)
     annotated_so_far = seed
 
@@ -140,20 +136,20 @@ def simulate_single(df: pd.DataFrame, model: LetorModel, seed_size: int,
     # Generate steps, make sure to train on all at the end
     number_of_groups = len(df_train.ext.groupby_qid)
     steps = []
-    for e in SliceSizeGenerator():
-        if e < number_of_groups:
-            steps.append(e)
+    for slice_size in SliceSizeGenerator():
+        if slice_size < number_of_groups:
+            steps.append(slice_size)
         else:
             steps.append(number_of_groups)
             break
 
     last_group_size = 0
-    for x in steps:
-        logger.info(f"Running on annotations [%d..%d]", last_group_size, x)
+    for step_size in steps:
+        logger.info(f"Running on annotations [%d..%d]", last_group_size, step_size)
         result = model.fit_evaluate(annotated_so_far, df)
         logger.debug(result)
 
-        train_slice = df_train.ext.slice_by_qid(last_group_size, x)
+        train_slice = df_train.ext.slice_by_qid(last_group_size, step_size)
         if train_slice.empty:
             break
 
@@ -161,10 +157,8 @@ def simulate_single(df: pd.DataFrame, model: LetorModel, seed_size: int,
 
         annotated_so_far = pd.concat([annotated_so_far, annotated_slice])
 
-        results[x] = result
-        last_group_size = x
-
-
+        results[step_size] = result
+        last_group_size = step_size
 
     return results
 
@@ -190,25 +184,22 @@ def main():
     SEED_SIZE = 10
 
     model_names = [
-        # "lgbm",
-        "ranknet_handcrafted",
-        #"ranksvm",
-        # "gppl",
-        #"dictionary_baseline",
-        #"levenshtein_baseline"
+        "lgbm",
+        #"ranknet_handcrafted",
+        "ranksvm",
+        "dictionary_baseline",
+        "levenshtein_baseline"
     ]
 
     dataset_names = [
         "wwo-fuseki",
-        "1641-fuseki",
-        "aida",
+        # "1641-fuseki",
+        # "aida",
     ]
 
     params = {
         "n_epochs": 30
     }
-
-    evaluate_on_train = False
 
     dir = path_to_results()
 
@@ -222,7 +213,7 @@ def main():
             df = load_handcrafted_simulation_data(dataset_name)
             model = get_model(model_name, df.ext.num_features)
 
-            results = simulate_single(df, model, SEED_SIZE, evaluate_on_train)
+            results = simulate_single(df, model, SEED_SIZE)
 
             plot_simulation(dir, results, model_name, dataset_name, "All")
 
@@ -233,7 +224,7 @@ def main():
                                     "acc1": score.accuracy,
                                     "acc5": score.accuracy_top5,
                                     "map": score.mean_reciprocal_rank,
-                                    "candidates": score.median_number_of_candidates
+                                    "candidates": score.mean_number_of_candidates
                                     })
 
             explanations = model.explain(df.ext.features)
@@ -248,6 +239,7 @@ def main():
 
     df = pd.DataFrame(all_explanations)
     df.to_csv(os.path.join(dir, f"explanations.csv"), index=False)
+
 
 if __name__ == '__main__':
     main()

@@ -16,7 +16,7 @@ from tqdm import tqdm
 from gleipnir.config import *
 from gleipnir.corpora import load_depositions_test_raw, load_depositions_dev_raw, load_depositions_train_raw, load_depositions_raw_all
 from gleipnir.formats import Corpus, write_conllel
-from gleipnir.models.handcrafted import FeatureGenerator
+from gleipnir.handcrafted import FeatureGenerator
 
 
 @attr.s
