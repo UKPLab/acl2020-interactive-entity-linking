@@ -63,6 +63,7 @@ class EarlyStopping:
                             best * min_delta / 100)
 
     def _save_checkpoint(self):
+        print("Save")
         os.makedirs(PATH_MODELS, exist_ok=True)
 
         path = os.path.join(PATH_MODELS, f'checkpoint_{self.name}.pt')

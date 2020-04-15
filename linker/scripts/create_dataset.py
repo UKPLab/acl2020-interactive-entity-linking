@@ -1,7 +1,9 @@
+import os
+
 from gleipnir.config import PATH_HANDCRAFTED
 from gleipnir.datasets import get_raw_corpus_data
 from gleipnir.handcrafted import Feature, FeatureGenerator, WikidataVirtuosoKnowledgeBase
-from gleipnir.kb import FusekiKnowledgeBase
+from gleipnir.kb import FusekiKnowledgeBase, KnowledgeBase
 
 
 def get_kb(kb_name: str, cached: bool = True) -> KnowledgeBase:
@@ -26,7 +28,7 @@ def main():
 
     for name in names:
         data = get_raw_corpus_data(name)
-        kb = get_kb(name, cached=False)
+        kb = get_kb(name, cached=True)
         features = list(Feature)
         # features = [Feature.LENGTH_CONTEXT]
         fg = FeatureGenerator()

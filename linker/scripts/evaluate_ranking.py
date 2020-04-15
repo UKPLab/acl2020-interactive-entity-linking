@@ -95,21 +95,21 @@ def evaluate_leven_baseline(dataset_name: str, df_train, df_eval) -> Result:
 def main():
     datasets_train_test = [
         # "aida",
-        "wwo-fuseki",
-        "1641-fuseki",
-    ]
-
-    datasets_cross_validation = [
         # "wwo-fuseki",
         # "1641-fuseki",
     ]
 
+    datasets_cross_validation = [
+        "wwo-fuseki",
+        "1641-fuseki",
+    ]
+
     eval_functions = [
-        #evaluate_dictionary_baseline,
-        #evaluate_leven_baseline,
+        evaluate_dictionary_baseline,
+        evaluate_leven_baseline,
         evaluate_lgbm,
         evaluate_ranksvm,
-        #evaluate_ranknet_handcrafted,
+        evaluate_ranknet_handcrafted,
     ]
 
     evaluate_on_test = True

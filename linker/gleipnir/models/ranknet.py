@@ -254,7 +254,6 @@ class RankNetTrainer:
 
                 if early_stopping.step(validation_result.accuracy_top5):
                     print(f"Early stopping", validation_result)
-                    self._model = early_stopping.load_best_model()
                     break
 
             print(f"\rEpisode {epoch} - Validation Scores: ", validation_result)

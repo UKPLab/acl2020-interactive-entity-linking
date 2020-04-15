@@ -50,15 +50,15 @@ For WWO and 1641, we use fuseki as the knowledge base server. To setup, follow t
 
 ## Generate datasets
 
-We precompute datasets and their features before experiments. Adjust which datasets you want to run. We cache requests to knowledge bases in order to make it feasible and not stress the endpoint too much. If you run the wrong KB with a dataset, remove the cache folder. Start the knowledge base as described in `Knowledge base setup`. Create datasets by running`linker/gleipnir/handcrafted.py`.
+We precompute datasets and their features before experiments. Adjust which datasets you want to run. We cache requests to knowledge bases in order to make it feasible and not stress the endpoint too much. If you run the wrong KB with a dataset, remove the cache folder. Start the knowledge base as described in `Knowledge base setup`. Create datasets by running`linker/scripts/create_dataset.py`.
 
 ## Running experiments
 
 ### Evaluate Ranker
 
-In order to evaluate the different ranker on the full train/dev/test split, change the models and datasets you want to evaluate and run `linker/gleipnir/experiments/evaluate_ranking.py`.
+In order to evaluate the different ranker on the full train/dev/test split, change the models and datasets you want to evaluate and run `linker/scripts/evaluate_ranking.py`.
 
 ### Simulation
 
-Change the models and datasets you want to evaluate, then run `linker/gleipnir/experiments/simulation.py`. The results can be found under `linker/results/${TIMESTAMP}`.
+Change the models and datasets you want to evaluate, then run `linker/scripts/simulation.py`. The results can be found under `linker/results/${TIMESTAMP}`.
 
