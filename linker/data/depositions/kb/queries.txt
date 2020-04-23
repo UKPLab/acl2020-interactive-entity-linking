@@ -1,0 +1,41 @@
+# Get all the irish people
+
+SELECT DISTINCT ?subj ?label ?desc WHERE {
+   { ?subj dct:subject	dbc:17th-century_Irish_people  }
+   UNION
+   {    ?subj a dbo:Person. ?subj dct:subject	dbc:Popes }
+   UNION
+   {
+       ?subj a dbo:Person. ?subj a dbo:Royalty  .
+       ?subj dbo:birthDate	?birthDate .
+       ?subj dbo:deathDate	?deathDate .
+
+       ?subj rdfs:label ?label.
+       ?subj rdfs:comment	?desc .
+       FILTER (langMatches(lang(?label),"en")) .
+       FILTER (langMatches(lang(?desc),"en")) .
+       FILTER(?birthDate < "1650-01-01"^^xsd:dateTime).
+       FILTER("1600-01-01"^^xsd:dateTime <= ?deathDate && ?deathDate < "1700-01-01"^^xsd:dateTime).
+   }
+   ?subj rdfs:label ?label.
+   ?subj rdfs:comment	?desc .
+   FILTER (langMatches(lang(?label),"en")) .
+   FILTER (langMatches(lang(?desc),"en"))
+}
+
+SELECT DISTINCT * WHERE {
+   { ?subj a dbo:HistoricPlace  } UNION { ?subj a dbo:Castle   } UNION { ?subj a dbo:Building } UNION { ?subj a dbo:PopulatedPlace } .
+   { ?subj dbo:country dbr:Republic_of_Ireland  } UNION { ?subj dbo:location dbr:Republic_of_Ireland  } .
+   ?subj rdfs:label ?label.
+   ?subj rdfs:comment	?desc .
+   FILTER (langMatches(lang(?label),"en")) .
+   FILTER (langMatches(lang(?desc),"en"))
+}
+
+
+
+add kings
+add churches
+add castles
+add popes
+add countries
