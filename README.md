@@ -3,9 +3,9 @@
 ### Jan-Christoph Klie, Richard Eckart de Castilho and Iryna Gurevych
 #### [UKP Lab, TU Darmstadt](https://www.informatik.tu-darmstadt.de/ukp/ukp_home/index.en.jsp)
 
-Source code for our experiments of our [ACL 2020 article](to appear). 
+Source code for our experiments of our [ACL 2020 article](to appear).
 
-> **Abstract:** Entity linking (EL) is concerned with disambiguating entity mentions in a text against knowledge bases (KB). It is crucial in a considerable number of fields like humanities, technical writing and biomedical sciences to enrich texts with semantics and discover more knowledge. The use of EL in such domains requires handling noisy texts, low resource settings and domain-specific KBs. Existing approaches are mostly inappropriate for this, as they depend on training data. However, in the above scenario, there exists hardly annotated data, and it needs to be created from scratch. We therefore present a novel domain-agnostic Human-In-The-Loop annotation approach: we use recommenders that suggest potential concepts and adaptive candidate ranking, thereby speeding up the overall annotation process and making it less tedious for users. We evaluate our ranking approach in a simulation on diffi cult texts and show that it greatly outperforms a strong baseline in ranking accuracy. In a user study, the annotation speed improves by 35 % compared to annotating without interactive support; users report that they strongly prefer our system.
+> **Abstract:** Entity linking (EL) is concerned with disambiguating entity mentions in a text against knowledge bases (KB). It is crucial in a considerable number of fields like humanities, technical writing and biomedical sciences to enrich texts with semantics and discover more knowledge. The use of EL in such domains requires handling noisy texts, low resource settings and domain-specific KBs. Existing approaches are mostly inappropriate for this, as they depend on training data. However, in the above scenario, there exists hardly annotated data, and it needs to be created from scratch. We therefore present a novel domain-agnostic Human-In-The-Loop annotation approach: we use recommenders that suggest potential concepts and adaptive candidate ranking, thereby speeding up the overall annotation process and making it less tedious for users. We evaluate our ranking approach in a simulation on difficult texts and show that it greatly outperforms a strong baseline in ranking accuracy. In a user study, the annotation speed improves by 35 % compared to annotating without interactive support; users report that they strongly prefer our system.
 
 * **Contact person:** Jan-Christoph Klie, klie@ukp.informatik.tu-darmstadt.de
     * UKP Lab: http://www.ukp.tu-darmstadt.de/
@@ -13,15 +13,21 @@ Source code for our experiments of our [ACL 2020 article](to appear).
 
 Drop me a line or report an issue if something is broken (and shouldn't be) or if you have any questions.
 
-For license information, please see the LICENSE and README files.
+For license information, please see the `LICENSE` and `README` files.
 
 > This repository contains experimental software and is published for the sole purpose of giving additional background details on the respective publication. 
 
+## Project structure
+
+This repository contains to projects, `data-converter` is a Java application for converting the data and `linker`, a Python project which contains all relevant experiments.
+
 ## Setting up the experiments
+
+In the `linker` folder, run
 
     pip install -r requirements.txt
 
-Copy the data from [here]() into `linker/generated` .
+Extract the `zero_to_hero.zip` from [here](https://tudatalib.ulb.tu-darmstadt.de/handle/tudatalib/2316) into `linker/generated` .
 
 ## Running experiments
 
@@ -76,7 +82,7 @@ The following steps describe how to convert the WWO data to documents and how to
 
 #### Fuseki
 
-For WWO and 1641, we use fuseki as the knowledge base server. To setup, follow the following steps:
+For WWO and 1641, we use [Fuseki](https://jena.apache.org/documentation/fuseki2/) as the knowledge base server. To setup, follow the following steps:
 
 1. Download Apache Jena and Fuseki 3.12.0 from the [project page](http://archive.apache.org/dist/jena/binaries/). The version is important.
 2. Build the search index by running `build_index.sh` in the `fuseki` folder.
@@ -88,7 +94,7 @@ We precompute datasets and their features before experiments. Adjust which datas
 
 ## Acknowledgements
 
-This project uses data from [DBPedia](https://wiki.dbpedia.org/) for `1641`. Please refer to their license when using the generated data in this project.
+This project uses data from [DBPedia](https://wiki.dbpedia.org/) for `1641`. Please refer to their license when using the generated data in this project. All rights for the `WWO` data are by the [Women Writers project](https://www.wwp.northeastern.edu/).
 
 
 
