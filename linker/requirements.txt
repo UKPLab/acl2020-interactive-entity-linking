@@ -45,7 +45,7 @@ nltk==3.4.5
 numpy==1.18.2
 packaging==20.3
 pandas==1.0.3
-Pillow==7.1.1
+Pillow==8.1.1
 pluggy==0.13.1
 py==1.8.1
 pyparsing==2.4.7
