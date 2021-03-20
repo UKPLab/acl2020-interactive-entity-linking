@@ -28,7 +28,7 @@ importlib-resources==1.4.0
 isodate==0.6.0
 itsdangerous==1.1.0
 jellyfish==0.7.2
-Jinja2==2.11.1
+Jinja2==2.11.3
 jmespath==0.9.5
 joblib==0.14.1
 kiwisolver==1.2.0
