@@ -30,7 +30,7 @@ itsdangerous==1.1.0
 jellyfish==0.7.2
 Jinja2==2.11.3
 jmespath==0.9.5
-joblib==0.14.1
+joblib==1.2.0
 kiwisolver==1.2.0
 langdetect==1.0.8
 lightgbm==2.3.1
