@@ -79,6 +79,6 @@ tqdm==4.45.0
 transformers==2.3.0
 urllib3==1.26.5
 wcwidth==0.1.9
-Werkzeug==1.0.1
+Werkzeug==2.2.3
 wrapt==1.12.1
 zipp==3.1.0
