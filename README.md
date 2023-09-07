@@ -7,7 +7,7 @@ Source code for our experiments of our [ACL 2020 article](https://aclanthology.o
 
 > **Abstract:** Entity linking (EL) is concerned with disambiguating entity mentions in a text against knowledge bases (KB). It is crucial in a considerable number of fields like humanities, technical writing and biomedical sciences to enrich texts with semantics and discover more knowledge. The use of EL in such domains requires handling noisy texts, low resource settings and domain-specific KBs. Existing approaches are mostly inappropriate for this, as they depend on training data. However, in the above scenario, there exists hardly annotated data, and it needs to be created from scratch. We therefore present a novel domain-agnostic Human-In-The-Loop annotation approach: we use recommenders that suggest potential concepts and adaptive candidate ranking, thereby speeding up the overall annotation process and making it less tedious for users. We evaluate our ranking approach in a simulation on difficult texts and show that it greatly outperforms a strong baseline in ranking accuracy. In a user study, the annotation speed improves by 35 % compared to annotating without interactive support; users report that they strongly prefer our system.
 
-* **Contact person:** Jan-Christoph Klie, klie@ukp.informatik.tu-darmstadt.de
+* **Contact person:** Jan-Christoph Klie, ukp@mrklie.com
     * UKP Lab: http://www.ukp.tu-darmstadt.de/
     * TU Darmstadt: http://www.tu-darmstadt.de/
 
@@ -19,7 +19,7 @@ For license information, please see the `LICENSE` and `README` files.
 
 ## Project structure
 
-This repository contains to projects, `data-converter` is a Java application for converting the data and `linker`, a Python project which contains all relevant experiments.
+This repository contains two projects, `data-converter` is a Java application for converting the data and `linker`, a Python project which contains all relevant experiments.
 
 ## Setting up the experiments
 
